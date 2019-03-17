@@ -1,0 +1,16 @@
+{% extends "layout.html" %}
+
+{% block heading %}
+    OOPS!
+{% endblock %}
+
+{% block body %}
+
+  <br>
+  <p>There was an error. Was the file a PDF?</p>
+  <br>
+  <a href="{{ url_for('index') }}">
+      Back
+  </a>
+
+{% endblock %}
