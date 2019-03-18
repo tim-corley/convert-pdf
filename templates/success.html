@@ -1,11 +1,15 @@
 {% extends "layout.html" %}
 
-{% block title %}
-    Success!
+{% block heading %}
+    SUCCESS!
 {% endblock %}
 
 {% block body %}
-    <h1>Success!</h1>
-
-    You have uploaded a file.
+    Your PDF has been converted to a text file.
+    File is at: <strong>{{ output }}</strong>
+    <br>
+    </br>
+    <a href="{{ url_for('index') }}">
+        Convert Another PDF
+    </a>
 {% endblock %}

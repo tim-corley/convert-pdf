@@ -1,21 +1,21 @@
 import os
-from flask import Flask, render_template, request, flash
+from flask import Flask, render_template, request, flash, send_from_directory
 from io import StringIO
 from pdfminer.pdfinterp import PDFResourceManager, PDFPageInterpreter
 from pdfminer.converter import TextConverter
 from pdfminer.layout import LAParams
 from pdfminer.pdfpage import PDFPage
 
-app = Flask(__name__)
-
 APP_ROOT = os.path.dirname(os.path.abspath(__file__))
 ALLOWED_EXTENSIONS = set(['pdf'])
+
+app = Flask(__name__)
 
 def allowed_file(filename):
     return '.' in filename and \
            filename.rsplit('.', 1)[1].lower() in ALLOWED_EXTENSIONS
 
-def convert(filename, pages=None):
+def converter(filename, pages=None):
     if not pages:
         pagenums = set()
     else:
@@ -39,36 +39,38 @@ def convert(filename, pages=None):
 def index():
     return render_template('upload.html')
 
-@app.route('/upload', methods=['POST', 'GET'])
-def upload():
+@app.route('/convert', methods=['POST', 'GET'])
+def convert():
 
     txt_file = request.form.get("txtname")
     txt_file = txt_file + '.txt'
-    print(txt_file)
+    # print(txt_file)
 
     target = os.path.join(APP_ROOT)
-    print(target)
+    # print(target)
 
     if not os.path.isdir(target):
         os.mkdir(target)
 
     for file in request.files.getlist('file'):
         if allowed_file(file.filename):
-            print(file)
+            # print(file)
             filename = file.filename
             destination = '/'.join([target, filename])
-            print(destination)
+            # print(destination)
             file.save(destination)
             filename = destination
-            filename = convert(filename)
+            filename = converter(filename)
             # print(filename)
+            output = '/'.join([target, txt_file])
+            # print(output)
             txtfile = open(txt_file, 'w')
             txtfile.write(filename)
             txtfile.close()
         else:
             return render_template('error.html')
 
-    return render_template('success.html')
+    return render_template('success.html', output=output)
 
 if __name__ == '__main__':
     app.run(debug = True)
