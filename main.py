@@ -1,5 +1,5 @@
 import os
-from flask import Flask, render_template, request, flash, send_from_directory
+from flask import Flask, render_template, request, flash, send_file
 from io import StringIO
 from pdfminer.pdfinterp import PDFResourceManager, PDFPageInterpreter
 from pdfminer.converter import TextConverter
@@ -39,6 +39,7 @@ def converter(filename, pages=None):
 def index():
     return render_template('upload.html')
 
+
 @app.route('/convert', methods=['POST', 'GET'])
 def convert():
 
@@ -62,15 +63,15 @@ def convert():
             filename = destination
             filename = converter(filename)
             # print(filename)
-            output = '/'.join([target, txt_file])
-            # print(output)
+            location = '/'.join([target, txt_file])
+            # print(location)
             txtfile = open(txt_file, 'w')
             txtfile.write(filename)
             txtfile.close()
         else:
             return render_template('error.html')
 
-    return render_template('success.html', output=output)
+    return render_template('success.html', output=filename, location=location)
 
 if __name__ == '__main__':
     app.run(debug = True)

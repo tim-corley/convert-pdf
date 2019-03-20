@@ -6,7 +6,13 @@
 
 {% block body %}
     Your PDF has been converted to a text file.
-    File is at: <strong>{{ output }}</strong>
+    <br>
+    </br>
+    Can be found at: <strong>{{ location }}</strong>
+    <br>
+    </br>
+    <strong>Output:</strong>
+    {{ output }}
     <br>
     </br>
     <a href="{{ url_for('index') }}">
